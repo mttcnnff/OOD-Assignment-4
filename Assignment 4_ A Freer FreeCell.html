@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://course.ccs.neu.edu/cs3500/hw_04_assignment.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=0.8"><title>Assignment 4: A Freer FreeCell</title><link rel="stylesheet" type="text/css" href="./Assignment 4_ A Freer FreeCell_files/scribble.css" title="default"><link rel="stylesheet" type="text/css" href="./Assignment 4_ A Freer FreeCell_files/footnote.css" title="default"><link rel="stylesheet" type="text/css" href="./Assignment 4_ A Freer FreeCell_files/screen.css" title="default"><link rel="stylesheet" type="text/css" href="./Assignment 4_ A Freer FreeCell_files/manual-racket.css" title="default"><script type="text/javascript" src="./Assignment 4_ A Freer FreeCell_files/scribble-common.js"></script><script type="text/javascript" src="./Assignment 4_ A Freer FreeCell_files/manual-racket.js"></script><!--[if IE 6]><style type="text/css">.SIEHidden { overflow: hidden; }</style><![endif]--><script src="./Assignment 4_ A Freer FreeCell_files/jquery.min.js"></script><script>$.noConflict();</script><script type="text/x-mathjax-config;executed=true">MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  tex2jax: {
+    inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+    displayMath: [ ["$$","$$"],
+                   ["\\[","\\]"],
+                   ["\\begin{equation}","\\end{equation}"],
+                   ["\\begin{equation*}","\\end{equation*}"] ],
+    processEscapes: true
+  },
+  "HTML-CSS": {
+    availableFonts: [],
+    webFont: "Asana-Math",
+    preferredFont: "Asana-Math",
+    imageFont: null,
+    mtexFontInherit: true
+  }
+});</script><script src="./Assignment 4_ A Freer FreeCell_files/MathJax.js" id=""></script><script src="./Assignment 4_ A Freer FreeCell_files/codemirror.js"></script><script src="./Assignment 4_ A Freer FreeCell_files/runmode.js"></script><script src="./Assignment 4_ A Freer FreeCell_files/scheme.js"></script><script src="./Assignment 4_ A Freer FreeCell_files/clike.js"></script><link type="text/css" rel="stylesheet" href="./Assignment 4_ A Freer FreeCell_files/screen.css"><script type="text/javascript">jQuery(document).ready(function($) {
+  $(function(){
+    $("code.sourceCode").each(function(_, code) {
+      if ($(code).data("lang")) {
+        CodeMirror.runMode($(code).text(), $(code).data("lang"), code);
+        $(code).addClass("cm-s-default");
+      }
+    });
+  });
+});</script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head><body id="scribble-racket-lang-org"><div id="MathJax_Message" style="display: none;"></div><div class="tocset"><div class="tocview"><div class="tocviewlist tocviewlisttopspace"><div class="tocviewtitle"><table cellspacing="0" cellpadding="0"><tbody><tr><td style="width: 1em;"><a href="javascript:void(0);" title="Expand/Collapse" class="tocviewtoggle" onclick="TocviewToggle(this,&quot;tocview_0&quot;);">►</a></td><td></td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html" class="tocviewselflink" data-pltdoc="x"><span class="AssignmentNum">Assignment 4:</span> A Freer Free<span class="mywbr"> &nbsp;</span>Cell</a></td></tr></tbody></table></div><div class="tocviewsublistonly" style="display: none;" id="tocview_0"><table cellspacing="0" cellpadding="0"><tbody><tr><td align="right">1&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Purpose%29" class="tocviewlink" data-pltdoc="x">Purpose</a></td></tr><tr><td align="right">2&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Multi-move_.Freecell%29" class="tocviewlink" data-pltdoc="x">Multi-<wbr>move Freecell</a></td></tr><tr><td align="right">3&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Design_.Constraints%29" class="tocviewlink" data-pltdoc="x">Design Constraints</a></td></tr><tr><td align="right">4&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.The_.Freecell.Model.Creator_class%29" class="tocviewlink" data-pltdoc="x">The <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Free</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">cell</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Model</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Creator</span></code></span> class</a></td></tr><tr><td align="right">5&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Deliverables%29" class="tocviewlink" data-pltdoc="x">Deliverables</a></td></tr><tr><td align="right">6&nbsp;</td><td><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Grading_standards%29" class="tocviewlink" data-pltdoc="x">Grading standards</a></td></tr></tbody></table></div></div></div><div class="tocsub"><table class="tocsublist" cellspacing="0"><tbody><tr><td><span class="tocsublinknumber"></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._%29" class="tocsubseclink" data-pltdoc="x"><span class="AssignmentNum">Assignment 4:</span> A Freer Free<span class="mywbr"> &nbsp;</span>Cell</a></td></tr><tr><td><span class="tocsublinknumber">1<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Purpose%29" class="tocsubseclink" data-pltdoc="x">Purpose</a></td></tr><tr><td><span class="tocsublinknumber">2<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Multi-move_.Freecell%29" class="tocsubseclink" data-pltdoc="x">Multi-<wbr>move Freecell</a></td></tr><tr><td><span class="tocsublinknumber">3<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Design_.Constraints%29" class="tocsubseclink" data-pltdoc="x">Design Constraints</a></td></tr><tr><td><span class="tocsublinknumber">4<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.The_.Freecell.Model.Creator_class%29" class="tocsubseclink" data-pltdoc="x">The <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Free</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">cell</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Model</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Creator</span></code></span> class</a></td></tr><tr><td><span class="tocsublinknumber">5<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Deliverables%29" class="tocsubseclink" data-pltdoc="x">Deliverables</a></td></tr><tr><td><span class="tocsublinknumber">6<tt>&nbsp;</tt></span><a href="https://course.ccs.neu.edu/cs3500/hw_04_assignment.html#%28part._.Grading_standards%29" class="tocsubseclink" data-pltdoc="x">Grading standards</a></td></tr></tbody></table></div></div><div class="maincolumn"><div class="main"><div class="versionbox"><span class="versionNoNav">6.8</span></div><h2><a name="(part._)"></a><span class="AssignmentNum">Assignment 4:</span> A Freer FreeCell</h2><p></p><h4 class="due">Due: Fri 06/02 at 8:59pm; self-evaluation due Sat 06/03 at 8:59pm</h4><p></p><p></p><p class="git-clone"><code><span class="kw">Starter files: </span><a href="https://course.ccs.neu.edu/cs3500/hw/04/code.zip">code.zip</a></code></p><p></p><h3>1<tt>&nbsp;</tt><a name="(part._.Purpose)"></a>Purpose</h3><p>In this assignment we will reap the fruits of our design, by introducing a new
+variant in the game of Freecell: the ability to move several cards at once.
+You will see how your earlier design of this program will facilitate adding
+this feature with (hopefully) minimal change in code.</p><p><span style="font-weight: bold">All <span style="font-style: italic">new</span> classes and interfaces for this homework should be in the
+<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">cs3500</span>.<span class="cm-variable">hw04</span></code></span> package. All classes written in previous assignments, even
+if improved upon, should remain in their respective packages.</span></p><p>We are giving you a starter file whose sole purpose is to ensure your code
+is in the correct packages with the correct visibility.</p><h3>2<tt>&nbsp;</tt><a name="(part._.Multi-move_.Freecell)"></a>Multi-move Freecell</h3><p>A more realistic version of Freecell is one where the player can move several cards
+at once from one cascade pile to another (while it is also possible to move several
+cards from a cascade pile to a foundation pile, we will ignore this feature in this
+variation).</p><p>Moving multiple cards must obey two conditions. The first condition is that they should form
+a valid <span style="font-style: italic">build</span>, i.e. they should be arranged in alternating colors and consecutive,
+ descending values in the cascade pile that they are moving from. The second condition
+is the same for any move to a cascade pile: these cards should form a
+build with the last card in the destination cascade pile.</p><p>It may be noted that the ability of moving cards (besides the two conditions above) is not
+a special feature, but a convenience to the player. A multi-card move is basically several
+single-card moves, using free open piles and empty cascade piles as “intermediate slots”.
+Thus a multi-card move may not be feasible even though it obeys the above two conditions, if
+there aren’t enough of these intermediate slots. More specifically, it can be proved that
+the maximum number of cards that can be moved when there are <span style="font-style: italic">N</span> free open piles and <span style="font-style: italic">K</span> empty
+cascade piles is <span style="font-style: italic"></span>(<span style="font-style: italic">N+</span>1<span style="font-style: italic"></span>)<span style="font-style: italic">*</span>2<span style="font-style: italic"></span><span style="vertical-align: super; font-size: 80%"><span style="font-style: italic">K</span></span><span style="font-style: italic"></span>. Your implementation of this variation should work within all
+these three conditions.</p><p>In order to use an empty cascade pile as an intermediary for multi-card moves, we will allow
+any card to move to an empty cascade pile (not just a king, as some Freecell versions mandate).</p><h3>3<tt>&nbsp;</tt><a name="(part._.Design_.Constraints)"></a>Design Constraints</h3><p>In this assignment, you must introduce this new feature in your game while
+respecting the following constraints:</p><ul><li><p>You are not allowed to change the controller interface
+(<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">IFreecellController</span></code></span>) or implementation (<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">FreecellController</span></code></span>) at all
+from <a href="https://course.ccs.neu.edu/cs3500/hw_03_assignment.html" data-pltdoc="x">Assignment 3</a>.</p></li><li><p>You are not allowed to change the interface of the model
+(<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">FreecellOperations</span><span class="cm-operator">&lt;</span><span class="cm-variable">K</span><span class="cm-operator">&gt;</span></code></span>) at all from <a href="https://course.ccs.neu.edu/cs3500/hw_03_assignment.html" data-pltdoc="x">Assignment 3</a>.</p></li><li><p>You must create a separate model implementation while keeping
+<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">FreecellModel</span></code></span> from <a href="https://course.ccs.neu.edu/cs3500/hw_03_assignment.html" data-pltdoc="x">Assignment 3</a> unchanged. That is, models that represent
+both variations of the Freecell game (single and multiple card moves) must
+co-exist. You are free to name the model implementation whatever you like.</p></li><li><p>You must provide a factory class <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">FreecellModelCreator</span></code></span>, that works as
+specified below.</p></li></ul><p>You <span style="font-style: italic">may</span> have to refactor your earlier design to do this. This is OK, but should
+be properly documented and justified. Again, you are not allowed to change existing
+interfaces or add new public methods.</p><h3>4<tt>&nbsp;</tt><a name="(part._.The_.Freecell.Model.Creator_class)"></a>The <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Free</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">cell</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Model</span></code></span><span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">Creator</span></code></span> class</h3><p>Write a class with the above name. The class should define a public enum
+<span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">GameType</span></code></span> with two possible values <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">SINGLEMOVE</span></code></span> and <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">MULTIMOVE</span></code></span>. It should offer
+a static factory method <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">create</span>(<span class="cm-variable">GameType</span> <span class="cm-variable">type</span>)</code></span> that returns either
+a <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">FreecellModel</span></code></span> or an object of your multi-card-move model, depending on the value of
+the parameter.</p><h3>5<tt>&nbsp;</tt><a name="(part._.Deliverables)"></a>Deliverables</h3><ul><li><p>Your new “multi-card move model” class</p></li><li><p>Your factory class</p></li><li><p>Your controller and model classes and related interfaces from <a href="https://course.ccs.neu.edu/cs3500/hw_02_assignment.html" data-pltdoc="x">Assignment 2</a> and <a href="https://course.ccs.neu.edu/cs3500/hw_03_assignment.html" data-pltdoc="x">Assignment 3</a> (possibly modified only to remove bugs and design limitations)</p></li><li><p>Tests for your multi-card move model and the related game in a JUnit test class. It is a good idea to include your earlier tests as well, for regression testing. We will.</p></li></ul><p><span style="font-weight: bold">All new classes and interfaces for this homework should be in the <span class="sourceCode"><code data-lang="text/x-java" class="sourceCode cm-s-default"><span class="cm-variable">cs3500</span>.<span class="cm-variable">hw04</span></code></span> package. All classes written in previous assignments, even if improved upon, should be in their own packages.</span></p><h3>6<tt>&nbsp;</tt><a name="(part._.Grading_standards)"></a>Grading standards</h3><p></p><p>For this assignment, you will be graded on
+</p><ul><li><p>Whether you had to modify any previously written interfaces,</p></li><li><p>whether your code implements the specifications (functional correctness),</p></li><li><p>the clarity of your code,</p></li><li><p>the comprehensiveness of your test coverage, and</p></li><li><p>how well you follow the
+<a href="https://google-styleguide.googlecode.com/svn/trunk/javaguide.html">style guide</a>.</p></li></ul><p></p><p>Please submit your homework to <a href="https://handins.ccs.neu.edu/"><span class="url">https://handins.ccs.neu.edu/</span></a> by the above deadline. Then be sure
+to complete your self evaluation by its deadline.</p><a name="(part._(gentag._5._assignment4))"></a><p class="FootnoteBlock"></p></div></div><div id="contextindicator">&nbsp;</div></body></html>
