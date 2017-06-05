@@ -8,6 +8,9 @@ import cs3500.hw02.card.CardValue;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for CardValue class using JUnit.
+ */
 public class CardValueTest {
 
   /*

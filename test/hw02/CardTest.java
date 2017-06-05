@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by Matt on 5/19/17.
+ * Test class for Card class using JUnit.
  */
 public class CardTest {
   Card aceOfSpades = new Card(CardValue.ace, CardSuit.spades);

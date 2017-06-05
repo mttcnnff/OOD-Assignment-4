@@ -6,17 +6,19 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
-import cs3500.hw02.FreecellModel;
+import cs3500.hw02.FreecellOperations;
 import cs3500.hw02.card.Card;
 import cs3500.hw03.FreecellController;
+import cs3500.hw04.FreecellModelCreator;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Matt on 5/23/17.
+ * Tests class for FreecellController using JUnit.
  */
 public class FreecellControllerTest {
-  FreecellModel testModel = new FreecellModel();
+  FreecellOperations<Card> testModel = FreecellModelCreator.create(FreecellModelCreator.GameType
+          .SINGLEMOVE);
   List<Card> deck = testModel.getDeck();
   FreecellController testController;
 
@@ -187,7 +189,7 @@ public class FreecellControllerTest {
     StringWriter output = new StringWriter();
     this.testController = new FreecellController(input, output);
     this.testController.playGame(deck, testModel, 8, 4, false);
-    String expected = "Enter Destination Pile Again:\n" +
+    String expected = "Enter Destination Pile Again: \n" +
             "Game quit prematurely.";
     assertEquals(expected, output.toString().substring(output.toString()
             .length() - expected.length()));

@@ -15,6 +15,7 @@ public interface FreecellOperations<K> {
    * An invalid deck is defined as a deck that has one or more of these flaws: <ul> <li>It does not
    * have 52 cards</li> <li>It has duplicate cards</li> <li>It has at least one invalid card
    * (invalid suit or invalid number) </li> </ul>
+   *
    * @return the deck of cards as a list
    */
   List<K> getDeck();

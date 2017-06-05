@@ -1,25 +1,30 @@
 package cs3500.hw03;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import cs3500.hw02.FreecellOperations;
 import cs3500.hw02.card.Card;
 import cs3500.hw03.input.CardIndexInput;
+import cs3500.hw03.input.Input;
 import cs3500.hw03.input.PileInput;
 
 /**
- * Created by Matt on 5/21/17.
+ * FreecellController class which implements the functionality described in the
+ * IFreecellController interface.
  */
 public class FreecellController implements IFreecellController<Card> {
 
   private Readable in;
   private Appendable out;
   private boolean quit;
+  private ArrayList<Input> move;
   private PileInput sourcePileEntry;
   private CardIndexInput cardIndexEntry;
   private PileInput destPileEntry;
+  private Scanner scan;
 
   /**
    * Constructor for FreecellController.
@@ -37,9 +42,15 @@ public class FreecellController implements IFreecellController<Card> {
     this.in = rd;
     this.out = ap;
     this.quit = false;
-    this.sourcePileEntry = new PileInput();
-    this.cardIndexEntry = new CardIndexInput();
-    this.destPileEntry = new PileInput();
+    this.sourcePileEntry = new PileInput("Source Pile");
+    this.cardIndexEntry = new CardIndexInput("Card Index");
+    this.destPileEntry = new PileInput("Destination Pile");
+    this.move = new ArrayList<>();
+    this.move.add(this.sourcePileEntry);
+    this.move.add(this.cardIndexEntry);
+    this.move.add(this.destPileEntry);
+
+
   }
 
   /**
@@ -91,7 +102,7 @@ public class FreecellController implements IFreecellController<Card> {
     }
 
     //Set up scanner for parsing
-    Scanner scan = new Scanner(this.in);
+    this.scan = new Scanner(this.in);
 
     //start game
     try {
@@ -105,59 +116,9 @@ public class FreecellController implements IFreecellController<Card> {
     while (!this.quit && !model.isGameOver()) {
       sendOutput(this.out, model.getGameState());
 
-      if (scan.hasNext()) {
-        this.sourcePileEntry.read(scan.next());
-        if (this.sourcePileEntry.quitCheck()) {
-          this.quit = true;
+      for (Input i : this.move) {
+        if (!this.getInput(i, "Enter " + i.toString() + " Again: ")) {
           break;
-        }
-        while (!this.sourcePileEntry.isValid()) {
-          sendOutput(this.out, "Enter Source Pile Again: ");
-          this.sourcePileEntry.read(scan.next());
-          if (this.sourcePileEntry.quitCheck()) {
-            this.quit = true;
-            break;
-          }
-        }
-      }
-
-      if (this.quit) {
-        break;
-      }
-
-      if (scan.hasNext()) {
-        this.cardIndexEntry.read(scan.next());
-        if (this.cardIndexEntry.quitCheck()) {
-          this.quit = true;
-          break;
-        }
-        while (!this.cardIndexEntry.isValid()) {
-          sendOutput(this.out, "Enter Card Index Again: ");
-          this.cardIndexEntry.read(scan.next());
-          if (this.cardIndexEntry.quitCheck()) {
-            this.quit = true;
-            break;
-          }
-        }
-      }
-
-      if (this.quit) {
-        break;
-      }
-
-      if (scan.hasNext()) {
-        this.destPileEntry.read(scan.next());
-        if (this.destPileEntry.quitCheck()) {
-          this.quit = true;
-          break;
-        }
-        while (!this.destPileEntry.isValid()) {
-          sendOutput(this.out, "Enter Destination Pile Again:");
-          this.destPileEntry.read(scan.next());
-          if (this.destPileEntry.quitCheck()) {
-            this.quit = true;
-            break;
-          }
         }
       }
 
@@ -187,12 +148,45 @@ public class FreecellController implements IFreecellController<Card> {
 
   }
 
+  /**
+   * Sends given msg to given appendable.
+   *
+   * @param ap  given appendable.
+   * @param msg given message.
+   */
   private void sendOutput(Appendable ap, String msg) {
     try {
       ap.append(msg);
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Scans given input to resolve action to take.
+   * Prints error if input is bad.
+   *
+   * @param input    input to parse into.
+   * @param errorMsg message to print if input is bad.
+   * @return true if input is good, false if user quit.
+   */
+  private boolean getInput(Input input, String errorMsg) {
+    if (this.scan.hasNext()) {
+      input.read(scan.next());
+      if (input.quitCheck()) {
+        this.quit = true;
+        return false;
+      }
+      while (!input.isValid()) {
+        sendOutput(this.out, errorMsg);
+        input.read(scan.next());
+        if (input.quitCheck()) {
+          this.quit = true;
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
 }

@@ -1,14 +1,23 @@
 package cs3500.hw02.pile;
 
+import java.util.ArrayList;
+
 import cs3500.hw02.PileType;
 import cs3500.hw02.card.Card;
 import cs3500.hw02.card.CardValue;
 
 /**
- * Created by Matt on 5/16/17.
+ * Concrete FoundationPile class.
+ * Extends AbstractPile and ensures proper behavior when moving cards to a Foundation Pile.
+ * Cards moving to a foundation pile must be of value one greater and the same suit than the
+ * stack's last card.
  */
 public class FoundationPile extends AbstractPile {
 
+
+  /**
+   * Constructor for Foundation Pile.
+   */
   public FoundationPile() {
     super(PileType.FOUNDATION, 4);
   }
@@ -23,16 +32,23 @@ public class FoundationPile extends AbstractPile {
    * and its value is one more than that of the card currently on top of the pile. If a foundation
    * pile is currently empty, any ace can be added to it: there is no required ordering of suits
    * in the foundation piles."
+   *
    * @return true if move is legal and made, false if it was not
    */
-
   @Override
-  public boolean put(int pileNumber, Card card) {
+  public boolean put(int pileNumber, ArrayList<Card> buffer) {
+    Card card = buffer.get(0);
+    ArrayList<Card> currentPile = this.pileContents.get(pileNumber);
+
+    if (buffer.size() > 1) {
+      return false;
+    }
+
 
     if (card.isOfValue(CardValue.ace)) {
 
-      if (this.pileContents.get(pileNumber).isEmpty()) {
-        this.pileContents.get(pileNumber).add(card);
+      if (currentPile.isEmpty()) {
+        currentPile.add(card);
         return true;
       } else {
         return false;
@@ -40,13 +56,12 @@ public class FoundationPile extends AbstractPile {
 
     } else {
 
-      if (this.pileContents.get(pileNumber).isEmpty()) {
+      if (currentPile.isEmpty()) {
         return false;
       }
-      Card topCard = this.pileContents.get(pileNumber)
-              .get(this.pileContents.get(pileNumber).size() - 1);
+      Card topCard = currentPile.get(currentPile.size() - 1);
       if (topCard.sameSuitAs(card) && card.compare(topCard) == 1) {
-        this.pileContents.get(pileNumber).add(card);
+        currentPile.add(card);
         return true;
       } else {
         return false;

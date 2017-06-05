@@ -8,6 +8,9 @@ import cs3500.hw02.card.CardSuit;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for CardSuit class using JUnit.
+ */
 public class CardSuitTest {
 
   /*

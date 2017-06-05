@@ -7,18 +7,24 @@ import cs3500.hw02.PileType;
  */
 public class PileInput extends AbstractInput {
 
-  public PileInput() {
-    super();
+  /**
+   * Constructor for PileInput.
+   *
+   * @param name string representation of this input.
+   */
+  public PileInput(String name) {
+    super(name);
   }
 
   @Override
   public boolean isValid() {
     String pattern = "[C|O|F]\\d+";
-    return this.move.matches(pattern);
+    return this.move.matches(pattern) && Integer.valueOf(this.move.substring(1)) != 0;
   }
 
   /**
    * Returns PileType value of this move if it is valid.
+   *
    * @return PileType value of this move.
    */
   public PileType getPileType() {
@@ -40,6 +46,7 @@ public class PileInput extends AbstractInput {
 
   /**
    * Returns integer value of this move's pile number, if it is valid.
+   *
    * @return integer value of this move.
    */
   public Integer getPileNumber() {

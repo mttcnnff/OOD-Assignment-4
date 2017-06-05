@@ -1,22 +1,29 @@
 package cs3500.hw03.input;
 
 /**
- * Created by Matt on 5/23/17.
+ * Concrete CardIndexInput class.
+ * Extends Abstract Input
  */
 public class CardIndexInput extends AbstractInput {
 
-  public CardIndexInput() {
-    super();
+  /**
+   * Constructor for CardIndexInput.
+   *
+   * @param name string representation of this input.
+   */
+  public CardIndexInput(String name) {
+    super(name);
   }
 
   @Override
   public boolean isValid() {
     String pattern = "\\d+";
-    return this.move.matches(pattern);
+    return this.move.matches(pattern) && Integer.valueOf(this.move) != 0;
   }
 
   /**
    * Gets integer value of cardIndex input if input is valid.
+   *
    * @return integer representation of this move.
    */
   public Integer getCardIndex() {

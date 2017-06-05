@@ -14,13 +14,14 @@ import cs3500.hw02.pile.FoundationPile;
 import cs3500.hw02.pile.OpenPile;
 
 /**
- * Created by Matt on 5/14/17.
+ * Class responsible for single card moving freecell model implementation.
+ * Implements FreecellOperations Interface.
  */
 public class FreecellModel implements FreecellOperations<Card> {
 
-  private List<Card> deck;
-  private HashMap<PileType, AbstractPile> piles;
-  boolean gameStarted;
+  protected List<Card> deck;
+  protected HashMap<PileType, AbstractPile> piles;
+  protected boolean gameStarted;
 
   /**
    * Constructor for Freecell model.
@@ -98,6 +99,10 @@ public class FreecellModel implements FreecellOperations<Card> {
       throw new IllegalArgumentException("Invalid pile Number for Destination.");
     }
 
+    if (this.piles.get(source).getPileSize(pileNumber) - 1 != cardIndex) {
+      throw new IllegalArgumentException("Not last card in pile!");
+    }
+
     if (!this.piles.get(source).move(pileNumber, cardIndex, this.piles.get(destination),
             destPileNumber)) {
       throw new IllegalArgumentException("Move not allowed.");
@@ -121,6 +126,10 @@ public class FreecellModel implements FreecellOperations<Card> {
             + "\n"
             + this.piles.get(PileType.CASCADE).getPileState();
   }
+
+  /*
+  PRIVATE METHODS
+   */
 
   private boolean deckIsInvalid(List<Card> deck) {
     //Check deck size

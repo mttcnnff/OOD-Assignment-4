@@ -7,16 +7,22 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import cs3500.hw02.FreecellOperations;
 import cs3500.hw02.card.Card;
 import cs3500.hw02.card.CardSuit;
 import cs3500.hw02.card.CardValue;
 import cs3500.hw02.FreecellModel;
 import cs3500.hw02.PileType;
+import cs3500.hw04.FreecellModelCreator;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests class for FreecellModel class using JUnit.
+ */
 public class FreecellModelTests {
-  FreecellModel testGame = new FreecellModel();
+  FreecellOperations<Card> testGame = FreecellModelCreator.create(FreecellModelCreator.GameType
+          .SINGLEMOVE);
   List<Card> deck = testGame.getDeck();
   List<Card> badDeck;
   List<Card> emptyDeck;

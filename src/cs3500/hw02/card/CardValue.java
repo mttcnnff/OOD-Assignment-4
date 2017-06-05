@@ -36,14 +36,29 @@ public enum CardValue {
 
   private int value;
 
+  /**
+   * Constructor for CardValue.
+   *
+   * @param value given value this card should be.
+   */
   CardValue(int value) {
     this.value = value;
   }
 
+  /**
+   * Gets integer value of card.
+   *
+   * @return integer value of this card.
+   */
   public int getCardValue() {
     return this.value;
   }
 
+  /**
+   * Gets a string representation of this value.
+   *
+   * @return string representation of value.
+   */
   @Override
   public String toString() {
     if (this.value > 1 && this.value < 11) {

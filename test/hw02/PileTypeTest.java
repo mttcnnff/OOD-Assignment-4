@@ -8,6 +8,9 @@ import cs3500.hw02.PileType;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test class for PileType class using JUnit.
+ */
 public class PileTypeTest {
   /*
    * Tests PileType.toString for OPEN, CASCADE, and FOUNDATION PILES
